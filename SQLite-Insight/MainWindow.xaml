@@ -11,7 +11,7 @@
 			<RowDefinition Height="20"/>
 			<RowDefinition Height="70*"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="30*"/>
+			<RowDefinition Height="31*"/>
 		</Grid.RowDefinitions>
 
 		<Menu>
@@ -27,12 +27,12 @@
 				<ColumnDefinition Width="60"/>
 			</Grid.ColumnDefinitions>
 
-            <DataGrid Grid.Column="0" Margin="15, 15, 10, 0" ItemsSource="{Binding Databases, UpdateSourceTrigger=PropertyChanged}"/>
+            <DataGrid Grid.Column="0" Margin="15, 10, 10, 0" ItemsSource="{Binding Databases, UpdateSourceTrigger=PropertyChanged}"/>
 
             <StackPanel Grid.Column="1">
-                <Button Content="Add" Margin="0, 15, 15, 0" Height="45"/>
-                <Button Content="Delete" Margin="0, 15, 15, 0" Height="45"/>
-                <Button Content="Save" Margin="0, 15, 15, 0" Height="45"/>
+                <Button Content="Add" Margin="0, 10, 15, 0" Height="45"/>
+                <Button Content="Delete" Margin="0, 10, 15, 0" Height="45"/>
+                <Button Content="Save" Margin="0, 10, 15, 0" Height="45"/>
             </StackPanel>
         </Grid>
 
@@ -52,6 +52,11 @@
 			</Grid.ColumnDefinitions>
 
 			<TextBox Grid.Column="0" Margin="15,0,10,15" Background="FloralWhite"></TextBox>
+
+            <StackPanel Grid.Column="1">
+                <Button Content="Execute" Height="45" Margin="0, 0, 15, 0"/>
+                <Button Content="Clear" Height="45" Margin="0, 10, 15, 0"/>
+            </StackPanel>
 
 		</Grid>
 		
