@@ -12,14 +12,21 @@ namespace SQLite_Insight.ViewModel
     {
 
         public RelayCommand OpenFileCommand { get; }
+        public RelayCommand ClearQueryCommand { get; }
+
+        [ObservableProperty]
+        private string queryTextBoxContent;
+
+        [ObservableProperty]
+        private Database? currentDatabase;
+
 
         public MainWindowViewModel()
         {
             OpenFileCommand = new RelayCommand(OnOpenFile);
+            ClearQueryCommand = new RelayCommand(OnClearQuery);
         }
 
-        [ObservableProperty]
-        private Database? currentDatabase;
 
         private void OnOpenFile()
         {
@@ -42,6 +49,12 @@ namespace SQLite_Insight.ViewModel
 
                 currentDatabase = new Database(path);
             }
+        }
+
+
+        private void OnClearQuery()
+        {
+            QueryTextBoxContent = "";
         }
     }
 }
