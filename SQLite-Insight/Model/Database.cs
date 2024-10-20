@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -7,14 +8,21 @@ namespace SQLite_Insight.Model
 {
     internal partial class Database : ObservableObject
     {
+
         [ObservableProperty]
         ObservableCollection<DatabaseRow> rows;
+
+        [ObservableProperty]
+        string path;
+
 
         public Database(string path)
         {
             rows = new ObservableCollection<DatabaseRow>();
-            LoadDatabaseContent(path);
+            Path = path;
+            LoadDatabaseContent();
         }
+
 
         public static bool IsValidSqliteDatabase(string databasePath)
         {
@@ -34,9 +42,10 @@ namespace SQLite_Insight.Model
             }
         }
 
-        private void LoadDatabaseContent(string path)
+
+        private void LoadDatabaseContent()
         {
-            string connectionString = $"Data Source={path}";
+            string connectionString = $"Data Source={Path}";
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -74,5 +83,33 @@ namespace SQLite_Insight.Model
                 }
             }
         }
+
+
+        // CREATE TABLE IF NOT EXISTS Users (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)
+        public bool Execute(string query)
+        {
+            string sql = query;
+            string connectionString = $"Data Source={Path}";
+
+            try
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
     }
 }

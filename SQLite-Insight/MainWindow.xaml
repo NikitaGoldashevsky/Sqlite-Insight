@@ -54,7 +54,7 @@
             <TextBox Grid.Column="0" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}" Margin="15,0,10,15" Background="FloralWhite"></TextBox>
 
             <StackPanel Grid.Column="1">
-                <Button Content="Execute" Height="45" Margin="0, 0, 15, 0"/>
+                <Button Content="Execute" Height="45" Margin="0, 0, 15, 0" Command="{Binding ExecuteQueryCommand}"/>
                 <Button Content="Clear" Height="45" Margin="0, 10, 15, 0" Command="{Binding ClearQueryCommand}"/>
             </StackPanel>
 
