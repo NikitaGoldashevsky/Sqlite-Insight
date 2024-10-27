@@ -42,10 +42,10 @@ namespace SQLite_Insight
 
                 // Set ItemsSource
                 var a = database.Rows;
-                var b = new ObservableCollection<Dictionary<string, string>> {
-                    new Dictionary<string, string>{ {"id", "1" }, { "name", "alice" }, { "age", "30"} },
-                    new Dictionary<string, string>{ { "id", "2"}, { "name", "john"}, { "age", "40"} }
-                };
+                //var b = new ObservableCollection<Dictionary<string, string>> {
+                //    new Dictionary<string, string>{ {"id", "1" }, { "name", "alice" }, { "age", "30"} },
+                //    new Dictionary<string, string>{ { "id", "2"}, { "name", "john"}, { "age", "40"} }
+                //};
                 myDataGrid.ItemsSource = a;
             }
             else
