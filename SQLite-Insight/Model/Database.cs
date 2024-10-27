@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Data.Sqlite;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -10,7 +11,7 @@ namespace SQLite_Insight.Model
     {
 
         [ObservableProperty]
-        ObservableCollection<DatabaseRow> rows;
+        ObservableCollection<Dictionary<string, string>> rows;
 
         [ObservableProperty]
         string path;
@@ -18,7 +19,7 @@ namespace SQLite_Insight.Model
 
         public Database(string path)
         {
-            rows = new ObservableCollection<DatabaseRow>();
+            rows = new ObservableCollection<Dictionary<string, string>>();
             Path = path;
             LoadDatabaseContent();
         }
@@ -69,12 +70,12 @@ namespace SQLite_Insight.Model
                         {
                             while (dataReader.Read())
                             {
-                                var row = new DatabaseRow();
+                                var row = new Dictionary<string, string>();
                                 for (int i = 0; i < dataReader.FieldCount; i++)
                                 {
                                     string columnName = dataReader.GetName(i);
-                                    object value = dataReader.GetValue(i);
-                                    row.Columns[columnName] = value;
+                                    string value = (string)dataReader.GetValue(i).ToString();
+                                    row[columnName] = value;
                                 }
                                 Rows.Add(row);
                             }

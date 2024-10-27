@@ -2,10 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using SQLite_Insight.Model;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace SQLite_Insight.ViewModel
@@ -21,14 +17,17 @@ namespace SQLite_Insight.ViewModel
         private string queryTextBoxContent;
 
         [ObservableProperty]
-        private Database? currentDatabase;
+        public Database? currentDatabase;
 
+        private readonly IDatabaseAction databaseAction;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IDatabaseAction databaseAction)
         {
             OpenFileCommand = new RelayCommand(OnOpenFile);
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
+
+            this.databaseAction = databaseAction;
         }
 
 
@@ -52,6 +51,8 @@ namespace SQLite_Insight.ViewModel
 
                 currentDatabase = new Database(path);
             }
+
+            this.databaseAction.FillDataGrid();
         }
 
 
