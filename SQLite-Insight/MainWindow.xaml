@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SQLite_Insight"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="450" Width="800" MinHeight="350">
+		Title="{Binding MainWindowTitle}" Height="450" Width="800" MinHeight="350">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" MinHeight="20"/>
@@ -51,7 +51,8 @@
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}" Margin="15,0,10,15" Background="FloralWhite"></TextBox>
+            <TextBox Grid.Column="0" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="15,0,10,15" Background="FloralWhite" FontFamily="Cascadia Code"></TextBox>
 
             <StackPanel Grid.Column="1">
                 <Button Content="Execute" Height="45" Margin="0, 0, 15, 0" Command="{Binding ExecuteQueryCommand}"/>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 
 namespace SQLite_Insight.Model
 {
@@ -14,7 +15,10 @@ namespace SQLite_Insight.Model
         ObservableCollection<Dictionary<string, string>> rows;
 
         [ObservableProperty]
-        string path;
+        private string? path;
+
+        [ObservableProperty]
+        private string? tableName;
 
 
         public Database(string path)
@@ -60,11 +64,11 @@ namespace SQLite_Insight.Model
                 {
                     while (reader.Read())
                     {
-                        string tableName = reader.GetString(0);
+                        TableName = reader.GetString(0);
 
                         // Read data from each table
                         var dataCommand = connection.CreateCommand();
-                        dataCommand.CommandText = $"SELECT * FROM {tableName}";
+                        dataCommand.CommandText = $"SELECT * FROM {TableName}";
 
                         using (var dataReader = dataCommand.ExecuteReader())
                         {
@@ -109,6 +113,51 @@ namespace SQLite_Insight.Model
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public bool Update()
+        {
+            if (Path == null)
+            {
+                return false;
+            }
+
+            Rows = new ObservableCollection<Dictionary<string, string>>();
+            LoadDatabaseContent();
+            return true;
+        }
+
+        public bool DeleteRow(string column1Value)
+        {
+            using (var connection = new SqliteConnection("Data Source=mydatabase.db"))
+            {
+                connection.Open();
+                
+
+                var command = connection.CreateCommand();
+                command.CommandText =
+                $@"
+                    DELETE FROM {tableName}
+                    WHERE Id = $id;
+                ";
+
+                //// Use parameterized queries to prevent SQL Injection
+                //command.Parameters.AddWithValue("$id", personId);
+
+                // Execute the command
+                int rowsAffected = command.ExecuteNonQuery(); // Returns the number of affected rows
+
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show($"Row deleted successfully!");
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show($"Row deletion failed.");
+                    return false;
+                }
             }
         }
 

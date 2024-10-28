@@ -1,11 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite_Insight.ViewModel;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using SQLite_Insight.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace SQLite_Insight
 {
@@ -35,18 +31,13 @@ namespace SQLite_Insight
                     DataGridTextColumn col = new DataGridTextColumn
                     {
                         Header = key,
-                        Binding = new Binding($"[{key}]") // Use indexer syntax for Dictionary
+                        Binding = new Binding($"[{key}]")
                     };
                     myDataGrid.Columns.Add(col);
                 }
 
                 // Set ItemsSource
-                var a = database.Rows;
-                //var b = new ObservableCollection<Dictionary<string, string>> {
-                //    new Dictionary<string, string>{ {"id", "1" }, { "name", "alice" }, { "age", "30"} },
-                //    new Dictionary<string, string>{ { "id", "2"}, { "name", "john"}, { "age", "40"} }
-                //};
-                myDataGrid.ItemsSource = a;
+                myDataGrid.ItemsSource = database.Rows;
             }
             else
             {

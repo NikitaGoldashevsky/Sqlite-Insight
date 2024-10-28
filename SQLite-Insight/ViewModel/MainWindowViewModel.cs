@@ -8,10 +8,15 @@ namespace SQLite_Insight.ViewModel
 {
     internal partial class MainWindowViewModel : ObservableObject
     {
+        private const string mainWindowDefaultTitle = "SQLite-Insight";
+
+        [ObservableProperty]
+        private string mainWindowTitle = mainWindowDefaultTitle;
 
         public RelayCommand OpenFileCommand { get; }
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
+        public RelayCommand DeleteRowCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -21,11 +26,13 @@ namespace SQLite_Insight.ViewModel
 
         private readonly IDatabaseAction databaseAction;
 
+
         public MainWindowViewModel(IDatabaseAction databaseAction)
         {
             OpenFileCommand = new RelayCommand(OnOpenFile);
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
+            DeleteRowCommand = new RelayCommand(OnDeleteRow);
 
             this.databaseAction = databaseAction;
         }
@@ -50,9 +57,9 @@ namespace SQLite_Insight.ViewModel
                 };
 
                 currentDatabase = new Database(path);
+                this.databaseAction.FillDataGrid();
+                MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
             }
-
-            this.databaseAction.FillDataGrid();
         }
 
 
@@ -64,6 +71,8 @@ namespace SQLite_Insight.ViewModel
             {
                 if (CurrentDatabase.Execute(QueryTextBoxContent))
                 {
+                    currentDatabase.Update();
+                    this.databaseAction.FillDataGrid();
                     return;
                 }
                 else
@@ -84,5 +93,14 @@ namespace SQLite_Insight.ViewModel
         {
             QueryTextBoxContent = "";
         }
+
+        private void OnDeleteRow()
+        {
+            bool deleted = currentDatabase.DeleteRow("sample");
+            if (!deleted)
+            {
+                MessageBox.Show("");
+            }
+        } 
     }
 }
