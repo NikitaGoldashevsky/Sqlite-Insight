@@ -5,39 +5,40 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SQLite_Insight"
 		mc:Ignorable="d"
-		Title="{Binding MainWindowTitle}" Height="450" Width="800" MinHeight="350">
+		Title="{Binding MainWindowTitle}" Height="450" Width="700" MinHeight="375">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20" MinHeight="20"/>
-            <RowDefinition Height="70*" MinHeight="165"/>
+            <RowDefinition Height="18" MinHeight="18"/>
+            <RowDefinition Height="65*" MinHeight="165"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="30*" MinHeight="115"/>
+            <!--<RowDefinition Height="25" MinHeight="25" MaxHeight="25"/>-->
+            <RowDefinition Height="35*" MinHeight="140"/>
         </Grid.RowDefinitions>
 
         <Menu>
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
+                <MenuItem Header="Save" Command="{Binding }"/>
+                <MenuItem Header="New" Command="{Binding }"/>
+            </MenuItem>
+
+            <MenuItem Header="View">
+                <MenuItem Header="Scale">
+                    <MenuItem Header="Default" Command="{Binding }"/>
+                    <MenuItem Header="More" Command="{Binding }"/>
+                    <MenuItem Header="Less" Command="{Binding }"/>
+                </MenuItem>
+                <MenuItem Header="Columns"/>
             </MenuItem>
 
         </Menu>
 
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
-            </Grid.ColumnDefinitions>
-
-            <DataGrid Grid.Column="0" Margin="15, 10, 10, 0" AutoGenerateColumns="False" x:Name="myDataGrid"/>
-
-            <StackPanel Grid.Column="1">
-                <Button Content="Add" Margin="0, 10, 15, 0" Height="45"/>
-                <Button Content="Delete" Margin="0, 10, 15, 0" Height="45"/>
-                <Button Content="Save" Margin="0, 10, 15, 0" Height="45"/>
-            </StackPanel>
+            <DataGrid Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" x:Name="myDataGrid"/>
         </Grid>
 
         <GridSplitter Grid.Row="2"
-			Margin="15, 5, 70, 5"
+			Margin="15, 5"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Stretch"
 			Background="LightGray" 
@@ -46,18 +47,34 @@
 		/>
 
         <Grid Grid.Row="3">
+         
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <TextBox Grid.Column="0" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="15,0,10,15" Background="FloralWhite" FontFamily="Cascadia Code"></TextBox>
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                <Button Height="auto" Width="50" Margin="15, 0, 0, 5" Content="Insert"></Button>
+                <Button Height="auto" Width="50" Margin="10, 0, 0, 5" Content="Delete"></Button>
+                <Button Height="auto" Width="50" Margin="10, 0, 0, 5" Content="Select"></Button>
+            </StackPanel>
+                
+            <TextBox Grid.Row="1" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="15,0,0,15" Background="FloralWhite" FontFamily="Cascadia Code"></TextBox>
 
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <Button Margin="10, 0, 15, 10" Content="EX" Height="30" Width="30" Command="{Binding ExecuteQueryCommand}"/>
+                <Button Margin="10, 0, 15, 10" Content="CL" Height="30" Width="30" Command="{Binding ClearQueryCommand}"/>
+            </StackPanel>
+            <!--<StackPanel Grid.Column="1">
                 <Button Content="Execute" Height="45" Margin="0, 0, 15, 0" Command="{Binding ExecuteQueryCommand}"/>
                 <Button Content="Clear" Height="45" Margin="0, 10, 15, 0" Command="{Binding ClearQueryCommand}"/>
-            </StackPanel>
+            </StackPanel>-->
 
         </Grid>
 
