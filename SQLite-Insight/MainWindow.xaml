@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SQLite_Insight"
 		mc:Ignorable="d"
-		Title="{Binding MainWindowTitle}" Height="450" Width="700" MinHeight="375">
+		Title="{Binding MainWindowTitle}" Height="450" Width="700" MinHeight="375" MinWidth="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="18" MinHeight="18"/>
@@ -65,7 +65,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Height="auto" Width="50" Margin="10, 0, 15, 5" Content="Help"></Button>
+                <Button Height="auto" Width="50" Margin="10, 0, 15, 5" Content="Help" Command="{Binding HelpCommand}"></Button>
             </StackPanel>
                 
             <TextBox Grid.Row="1" MinHeight="95" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}"

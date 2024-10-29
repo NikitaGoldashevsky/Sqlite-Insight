@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using SQLite_Insight.Model;
+using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace SQLite_Insight.ViewModel
@@ -17,6 +19,7 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
         public RelayCommand DeleteRowCommand { get; }
+        public RelayCommand HelpCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -33,6 +36,7 @@ namespace SQLite_Insight.ViewModel
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
             DeleteRowCommand = new RelayCommand(OnDeleteRow);
+            HelpCommand = new RelayCommand(OnHelp);
 
             this.databaseAction = databaseAction;
         }
@@ -101,6 +105,24 @@ namespace SQLite_Insight.ViewModel
             {
                 MessageBox.Show("");
             }
-        } 
+        }
+
+        private void OnHelp()
+        {
+            string url = "https://www.sqlitetutorial.net/";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while opening webpage: {ex.Message}");
+            }
+        }
     }
 }
