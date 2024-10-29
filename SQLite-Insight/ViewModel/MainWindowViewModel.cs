@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using SQLite_Insight.Model;
 using System;
 using System.Diagnostics;
+using System.Printing;
 using System.Windows;
 
 namespace SQLite_Insight.ViewModel
@@ -19,6 +20,9 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
         public RelayCommand HelpCommand { get; }
+        public RelayCommand QueryInsertCommand { get; }
+        public RelayCommand QueryDeleteCommand { get; }
+        public RelayCommand QuerySelectCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -35,6 +39,9 @@ namespace SQLite_Insight.ViewModel
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
             HelpCommand = new RelayCommand(OnHelp);
+            QueryInsertCommand = new RelayCommand(OnQueryInsert);
+            QueryDeleteCommand = new RelayCommand(OnQueryDelete);
+            QuerySelectCommand = new RelayCommand(OnQuerySelect);
 
             this.databaseAction = databaseAction;
         }
@@ -58,7 +65,7 @@ namespace SQLite_Insight.ViewModel
                     return;
                 };
 
-                currentDatabase = new Database(path);
+                CurrentDatabase = new Database(path);
                 this.databaseAction.FillDataGrid();
                 MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
             }
@@ -73,7 +80,7 @@ namespace SQLite_Insight.ViewModel
             {
                 if (CurrentDatabase.Execute(QueryTextBoxContent))
                 {
-                    currentDatabase.Update();
+                    CurrentDatabase.Update();
                     this.databaseAction.FillDataGrid();
                     return;
                 }
@@ -112,6 +119,57 @@ namespace SQLite_Insight.ViewModel
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred while opening webpage: {ex.Message}");
+            }
+        }
+
+
+        private void OnQueryInsert()
+        {
+            string sampleInsertQuery = "INSERT INTO table_name () VALUES ();";
+
+            if (CurrentDatabase != null)
+            {
+                string columnNamesString = string.Join(", ", currentDatabase.GetColumnNames());
+                QueryTextBoxContent = $"INSERT INTO {CurrentDatabase.TableName} ({columnNamesString}) VALUES (  );";
+            }
+            else {
+                QueryTextBoxContent = sampleInsertQuery;
+            }
+        }
+
+
+        private void OnQuerySelect()
+        {
+            string sampleSelectQuery = "SELECT () FROM table_name;";
+
+            if (CurrentDatabase != null)
+            {
+                string columnNamesString = string.Join(", ", currentDatabase.GetColumnNames());
+                QueryTextBoxContent = $"SELECT {columnNamesString} FROM {CurrentDatabase.TableName};";
+            }
+            else
+            {
+                QueryTextBoxContent = sampleSelectQuery;
+            }
+        }
+
+
+        private void OnQueryDelete()
+        {
+            string sampleSelectQuery = "DELETE FROM table_name WHERE condition;";
+
+            if (CurrentDatabase != null)
+            {
+                string columnNames = "";
+                foreach (string column in CurrentDatabase.GetColumnNames())
+                {
+                    columnNames += column;
+                }
+                QueryTextBoxContent = $"DELETE FROM {CurrentDatabase.TableName} WHERE (  );";
+            }
+            else
+            {
+                QueryTextBoxContent = sampleSelectQuery;
             }
         }
     }

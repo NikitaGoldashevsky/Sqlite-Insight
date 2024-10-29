@@ -48,6 +48,31 @@ namespace SQLite_Insight.Model
         }
 
 
+        public ObservableCollection<string> GetColumnNames()
+        {
+            ObservableCollection<string> columnNames = new ObservableCollection<string>();
+
+            using (var connection = new SqliteConnection($"Data Source={Path}"))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand($"PRAGMA table_info({TableName});", connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // the column name is in the second column (index 1)
+                            string columnName = reader.GetString(1);
+                            columnNames.Add(columnName);
+                        }
+                    }
+                }
+            }
+            
+            return columnNames;
+        }
+
+
         private void LoadDatabaseContent()
         {
             string connectionString = $"Data Source={Path}";
