@@ -18,7 +18,6 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand OpenFileCommand { get; }
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
-        public RelayCommand DeleteRowCommand { get; }
         public RelayCommand HelpCommand { get; }
 
         [ObservableProperty]
@@ -35,7 +34,6 @@ namespace SQLite_Insight.ViewModel
             OpenFileCommand = new RelayCommand(OnOpenFile);
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
-            DeleteRowCommand = new RelayCommand(OnDeleteRow);
             HelpCommand = new RelayCommand(OnHelp);
 
             this.databaseAction = databaseAction;
@@ -98,14 +96,6 @@ namespace SQLite_Insight.ViewModel
             QueryTextBoxContent = "";
         }
 
-        private void OnDeleteRow()
-        {
-            bool deleted = currentDatabase.DeleteRow("sample");
-            if (!deleted)
-            {
-                MessageBox.Show("");
-            }
-        }
 
         private void OnHelp()
         {
