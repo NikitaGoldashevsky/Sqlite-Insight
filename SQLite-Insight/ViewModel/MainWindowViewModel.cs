@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Data.Sqlite;
 using Microsoft.Win32;
 using SQLite_Insight.Model;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Printing;
 using System.Windows;
 
@@ -17,6 +19,7 @@ namespace SQLite_Insight.ViewModel
         private string mainWindowTitle = mainWindowDefaultTitle;
 
         public RelayCommand OpenFileCommand { get; }
+        public RelayCommand NewFileCommand { get; }
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
         public RelayCommand HelpCommand { get; }
@@ -36,6 +39,7 @@ namespace SQLite_Insight.ViewModel
         public MainWindowViewModel(IDatabaseAction databaseAction)
         {
             OpenFileCommand = new RelayCommand(OnOpenFile);
+            NewFileCommand = new RelayCommand(OnNewFile);
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
             HelpCommand = new RelayCommand(OnHelp);
@@ -52,7 +56,7 @@ namespace SQLite_Insight.ViewModel
             var fileDialog = new OpenFileDialog();
 
             fileDialog.Filter = "SQLite Database | *.sqlite; *.sqlite3; *.db; *.db3; *.s3db; *.sl3";
-            fileDialog.Title = "Pick an SQLite database file...";
+            fileDialog.Title = "Pick an SQLite database file";
 
             bool? opened = fileDialog.ShowDialog();
             if (opened == true)
@@ -118,7 +122,7 @@ namespace SQLite_Insight.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred while opening webpage: {ex.Message}");
+                MessageBox.Show($"An error occurred while opening webpage: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -170,6 +174,41 @@ namespace SQLite_Insight.ViewModel
             else
             {
                 QueryTextBoxContent = sampleSelectQuery;
+            }
+        }
+
+
+        private void OnNewFile()
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog
+            {
+                Title = "Create a new database file",
+                Filter = "SQLite Database (*.db)|*.db",
+                DefaultExt = "db"
+            };
+
+            bool? fileCreated = fileDialog.ShowDialog();
+
+            if (fileCreated == true)
+            {
+                string filePath = fileDialog.FileName;
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                string directoryPath = System.IO.Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                using (FileStream fs = File.Create(filePath)) { }
+                string tableName = "test_table_name";
+                currentDatabase = new Database(filePath, true, tableName);
+
+                //MessageBox.Show($"File {System.IO.Path.GetFileName(filePath)} already exists!", 
+                //    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -18,8 +18,7 @@
         <Menu>
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
-                <MenuItem Header="Save" Command="{Binding }"/>
-                <MenuItem Header="New" Command="{Binding }"/>
+                <MenuItem Header="New" Command="{Binding NewFileCommand}"/>
             </MenuItem>
 
             <MenuItem Header="View">

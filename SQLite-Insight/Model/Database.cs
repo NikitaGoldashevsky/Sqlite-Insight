@@ -21,13 +21,35 @@ namespace SQLite_Insight.Model
         private string? tableName;
 
 
-        public Database(string path)
+        public Database(string path, bool createNew = false, string tableName="new_table")
         {
+            if (createNew)
+            {
+                try
+                {
+                    using (var connection = new SqliteConnection($"Data Source={path};"))
+                    {
+                        connection.Open();
+                        string createTableQuery = $"CREATE TABLE IF NOT EXISTS {tableName} (Key INTEGER, Value TEXT)";
+                        TableName = tableName;
+
+                        using (SqliteCommand command = new SqliteCommand(createTableQuery, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to create database due to an error: {ex.Message}");
+                    File.Delete(path);
+                }
+            }
+
             rows = new ObservableCollection<Dictionary<string, string>>();
             Path = path;
             LoadDatabaseContent();
         }
-
 
         public static bool IsValidSqliteDatabase(string databasePath)
         {
@@ -153,38 +175,37 @@ namespace SQLite_Insight.Model
             return true;
         }
 
-        public bool DeleteRow(string column1Value)
-        {
-            using (var connection = new SqliteConnection("Data Source=mydatabase.db"))
-            {
-                connection.Open();
+        //public bool DeleteRow(string column1Value)
+        //{
+        //    using (var connection = new SqliteConnection("Data Source=mydatabase.db"))
+        //    {
+        //        connection.Open();
                 
 
-                var command = connection.CreateCommand();
-                command.CommandText =
-                $@"
-                    DELETE FROM {tableName}
-                    WHERE Id = $id;
-                ";
+        //        var command = connection.CreateCommand();
+        //        command.CommandText =
+        //        $@"
+        //            DELETE FROM {tableName}
+        //            WHERE Id = $id;
+        //        ";
 
-                //// Use parameterized queries to prevent SQL Injection
-                //command.Parameters.AddWithValue("$id", personId);
+        //        //// Use parameterized queries to prevent SQL Injection
+        //        //command.Parameters.AddWithValue("$id", personId);
 
-                // Execute the command
-                int rowsAffected = command.ExecuteNonQuery(); // Returns the number of affected rows
+        //        // Execute the command
+        //        int rowsAffected = command.ExecuteNonQuery(); // Returns the number of affected rows
 
-                if (rowsAffected > 0)
-                {
-                    MessageBox.Show($"Row deleted successfully!");
-                    return true;
-                }
-                else
-                {
-                    MessageBox.Show($"Row deletion failed.");
-                    return false;
-                }
-            }
-        }
-
+        //        if (rowsAffected > 0)
+        //        {
+        //            MessageBox.Show($"Row deleted successfully!");
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show($"Row deletion failed.");
+        //            return false;
+        //        }
+        //    }
+        //}
     }
 }
