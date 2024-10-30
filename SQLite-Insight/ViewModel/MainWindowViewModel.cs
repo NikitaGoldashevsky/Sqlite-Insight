@@ -82,15 +82,15 @@ namespace SQLite_Insight.ViewModel
 
             if (CurrentDatabase != null)
             {
-                if (CurrentDatabase.Execute(QueryTextBoxContent))
+                try
                 {
+                    CurrentDatabase.Execute(QueryTextBoxContent);
                     CurrentDatabase.Update();
                     this.databaseAction.FillDataGrid();
                     return;
                 }
-                else
-                {
-                    errorMessage = "Query execution failed!";
+                catch (Exception ex) { 
+                    errorMessage = $"Query execution failed: {ex.Message}";
                 }
             }
             else
