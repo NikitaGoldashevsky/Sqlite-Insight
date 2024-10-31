@@ -26,6 +26,9 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand QueryInsertCommand { get; }
         public RelayCommand QueryDeleteCommand { get; }
         public RelayCommand QuerySelectCommand { get; }
+        public RelayCommand QueryAddCommand { get; }
+        public RelayCommand QueryDropCommand { get; }
+        public RelayCommand QueryRenameCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -46,6 +49,9 @@ namespace SQLite_Insight.ViewModel
             QueryInsertCommand = new RelayCommand(OnQueryInsert);
             QueryDeleteCommand = new RelayCommand(OnQueryDelete);
             QuerySelectCommand = new RelayCommand(OnQuerySelect);
+            QueryAddCommand = new RelayCommand(OnQueryAdd);
+            QueryDropCommand = new RelayCommand(OnQueryDrop);
+            QueryRenameCommand = new RelayCommand(OnQueryRename);
 
             this.databaseAction = databaseAction;
         }
@@ -133,7 +139,7 @@ namespace SQLite_Insight.ViewModel
 
             if (CurrentDatabase != null)
             {
-                string columnNamesString = string.Join(", ", currentDatabase.GetColumnNames());
+                string columnNamesString = string.Join(", ", CurrentDatabase.GetColumnNames());
                 QueryTextBoxContent = $"INSERT INTO {CurrentDatabase.TableName} ({columnNamesString}) VALUES (  );";
             }
             else {
@@ -148,7 +154,7 @@ namespace SQLite_Insight.ViewModel
 
             if (CurrentDatabase != null)
             {
-                string columnNamesString = string.Join(", ", currentDatabase.GetColumnNames());
+                string columnNamesString = string.Join(", ", CurrentDatabase.GetColumnNames());
                 QueryTextBoxContent = $"SELECT {columnNamesString} FROM {CurrentDatabase.TableName};";
             }
             else
@@ -164,12 +170,52 @@ namespace SQLite_Insight.ViewModel
 
             if (CurrentDatabase != null)
             {
-                string columnNames = "";
-                foreach (string column in CurrentDatabase.GetColumnNames())
-                {
-                    columnNames += column;
-                }
                 QueryTextBoxContent = $"DELETE FROM {CurrentDatabase.TableName} WHERE (  );";
+            }
+            else
+            {
+                QueryTextBoxContent = sampleSelectQuery;
+            }
+        }
+
+
+        private void OnQueryAdd()
+        {
+            string sampleSelectQuery = "ALTER TABLE table_name ADD column_name datatype;";
+
+            if (CurrentDatabase != null)
+            {
+                QueryTextBoxContent = $"ALTER TABLE {CurrentDatabase.TableName} ADD name type;";
+            }
+            else
+            {
+                QueryTextBoxContent = sampleSelectQuery;
+            }
+        }
+
+
+        private void OnQueryDrop()
+        {
+            string sampleSelectQuery = "ALTER TABLE table_name DROP COLUMN column_name;";
+
+            if (CurrentDatabase != null)
+            {
+                QueryTextBoxContent = $"ALTER TABLE {CurrentDatabase.TableName} DROP COLUMN name;";
+            }
+            else
+            {
+                QueryTextBoxContent = sampleSelectQuery;
+            }
+        }
+
+
+        private void OnQueryRename()
+        {
+            string sampleSelectQuery = "ALTER TABLE table_name RENAME COLUMN old_name TO new_name;";
+
+            if (CurrentDatabase != null)
+            {
+                QueryTextBoxContent = $"ALTER TABLE {CurrentDatabase.TableName} RENAME COLUMN old TO new;";
             }
             else
             {
