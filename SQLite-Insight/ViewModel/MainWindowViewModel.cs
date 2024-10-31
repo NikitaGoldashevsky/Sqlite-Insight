@@ -238,12 +238,19 @@ namespace SQLite_Insight.ViewModel
 
             bool? fileCreated = fileDialog.ShowDialog();
 
-            string? tableName;
-            tableName = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
-            if (tableName == null)
+            string? dialogResult;
+            string tableName;
+            do
             {
-                return;
+                dialogResult = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
+                if (dialogResult == null)
+                {
+                    return;
+                }
             }
+            while (dialogResult.IndexOf(' ') != -1);
+
+            tableName = dialogResult;
 
             if (fileCreated == true)
             {
@@ -259,7 +266,7 @@ namespace SQLite_Insight.ViewModel
                     Directory.CreateDirectory(directoryPath);
                 }
 
-                FileStream fs = File.Create(filePath);
+                using (FileStream fs = File.Create(filePath)) { };
 
                 CurrentDatabase = new Database(filePath, true, tableName);
             }
