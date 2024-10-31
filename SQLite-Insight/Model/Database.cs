@@ -138,28 +138,20 @@ namespace SQLite_Insight.Model
 
 
         // CREATE TABLE IF NOT EXISTS Users (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)
-        public bool Execute(string query)
+        public void Execute(string query)
         {
             string sql = query;
             string connectionString = $"Data Source={Path}";
 
-            try
+            using (var connection = new SqliteConnection(connectionString))
             {
-                using (var connection = new SqliteConnection(connectionString))
-                {
-                    connection.Open();
+                connection.Open();
 
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = sql;
-                        command.ExecuteNonQuery();
-                        return true;
-                    }
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
                 }
-            }
-            catch (Exception ex)
-            {
-                return false;
             }
         }
 

@@ -25,6 +25,11 @@ namespace SQLite_Insight
 
                 myDataGrid.Columns.Clear();
 
+                if (database.Rows.Count == 0)
+                {
+                    return;
+                }
+
                 // Set up columns
                 foreach (var key in database.Rows[0].Keys)
                 {
@@ -41,7 +46,7 @@ namespace SQLite_Insight
             }
             else
             {
-                MessageBox.Show("DataContext is not of type MainWindowViewModel.");
+                MessageBox.Show("Error while filling data grid.", "Error");
             }
         }
 

@@ -91,6 +91,7 @@ namespace SQLite_Insight.ViewModel
                 try
                 {
                     CurrentDatabase.Execute(QueryTextBoxContent);
+
                     CurrentDatabase.Update();
                     this.databaseAction.FillDataGrid();
                     return;
