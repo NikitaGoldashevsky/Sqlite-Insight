@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Printing;
 using System.Windows;
+using SQLite_Insight.View;
+using System.Linq;
 
 namespace SQLite_Insight.ViewModel
 {
@@ -236,6 +238,13 @@ namespace SQLite_Insight.ViewModel
 
             bool? fileCreated = fileDialog.ShowDialog();
 
+            string? tableName;
+            tableName = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
+            if (tableName == null)
+            {
+                return;
+            }
+
             if (fileCreated == true)
             {
                 string filePath = fileDialog.FileName;
@@ -250,12 +259,9 @@ namespace SQLite_Insight.ViewModel
                     Directory.CreateDirectory(directoryPath);
                 }
 
-                using (FileStream fs = File.Create(filePath)) { }
-                string tableName = "test_table_name";
-                currentDatabase = new Database(filePath, true, tableName);
+                FileStream fs = File.Create(filePath);
 
-                //MessageBox.Show($"File {System.IO.Path.GetFileName(filePath)} already exists!", 
-                //    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CurrentDatabase = new Database(filePath, true, tableName);
             }
         }
     }
