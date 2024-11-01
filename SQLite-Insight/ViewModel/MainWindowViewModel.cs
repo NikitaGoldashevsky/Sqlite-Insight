@@ -33,6 +33,7 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand QueryAddCommand { get; }
         public RelayCommand QueryDropCommand { get; }
         public RelayCommand QueryRenameCommand { get; }
+        public RelayCommand ChangeSelectionModeCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -56,6 +57,7 @@ namespace SQLite_Insight.ViewModel
             QueryAddCommand = new RelayCommand(OnQueryAdd);
             QueryDropCommand = new RelayCommand(OnQueryDrop);
             QueryRenameCommand = new RelayCommand(OnQueryRename);
+            ChangeSelectionModeCommand = new RelayCommand(OnChangeSelectionMode);
 
             this.databaseAction = databaseAction;
         }
@@ -80,8 +82,9 @@ namespace SQLite_Insight.ViewModel
                 };
 
                 CurrentDatabase = new Database(path);
-                this.databaseAction.FillDataGrid();
                 MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
+                this.databaseAction.FillDataGrid();
+                databaseAction.SetSelectionButtonVisibility(false);
             }
         }
 
@@ -93,7 +96,7 @@ namespace SQLite_Insight.ViewModel
                 MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            ObservableCollection<Dictionary<string, string>> selectionResult;
+            ObservableCollection<Dictionary<string, string>>? selectionResult;
 
             try
             {
@@ -105,15 +108,17 @@ namespace SQLite_Insight.ViewModel
                 return;
             }
 
-            if (selectionResult.Count == 0)
-            {
-                CurrentDatabase.Update();
-            }
-            else
+            if (selectionResult != null)
             {
                 CurrentDatabase.CurrentSelection = selectionResult;
                 CurrentDatabase.SelectionMode = true;
+                databaseAction.SetSelectionButtonVisibility(true);
             }
+            else
+            {
+                CurrentDatabase.Update();
+            }
+
             this.databaseAction.FillDataGrid();
             return;
         }
@@ -280,6 +285,17 @@ namespace SQLite_Insight.ViewModel
             MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
 
             this.databaseAction.FillDataGrid();
+            databaseAction.SetSelectionButtonVisibility(false);
+        }
+
+        private void OnChangeSelectionMode()
+        {
+            if (CurrentDatabase == null) 
+            {
+                return;
+            }
+            CurrentDatabase.SelectionMode = !CurrentDatabase.SelectionMode;
+            databaseAction.FillDataGrid();
         }
     }
 }

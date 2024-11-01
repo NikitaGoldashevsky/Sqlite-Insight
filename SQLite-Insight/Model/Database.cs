@@ -143,10 +143,10 @@ namespace SQLite_Insight.Model
         }
 
 
-        public ObservableCollection<Dictionary<string, string>> Execute(string query)
+        public ObservableCollection<Dictionary<string, string>>? Execute(string query)
         {
             string connectionString = $"Data Source={Path}";
-            var results = new ObservableCollection<Dictionary<string, string>>();
+            ObservableCollection<Dictionary<string, string>>? results = null;
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -158,6 +158,7 @@ namespace SQLite_Insight.Model
 
                     if (query.TrimStart().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
                     {
+                        results = new ObservableCollection<Dictionary<string, string>>();
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -174,7 +175,6 @@ namespace SQLite_Insight.Model
                     }
                     else
                     {
-                        // Execute non-select queries
                         command.ExecuteNonQuery();
                     }
                 }

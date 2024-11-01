@@ -26,11 +26,12 @@ namespace SQLite_Insight
                 return;
             }
 
-            myDataGrid.Columns.Clear();
-            myDataGrid.ItemsSource = null;
-
+            databaseDataGrid.Columns.Clear();
+            databaseDataGrid.ItemsSource = null;
+            
             if (vm.CurrentDatabase.SelectionMode == false)
             {
+                selectionModeButton.Content = "⚎";
                 var database = vm.CurrentDatabase;
 
                 if (database.Rows.Count == 0)
@@ -44,7 +45,7 @@ namespace SQLite_Insight
                             {
                                 Header = columnName
                             };
-                            myDataGrid.Columns.Add(col);
+                            databaseDataGrid.Columns.Add(col);
                         }
                     }
 
@@ -58,13 +59,14 @@ namespace SQLite_Insight
                         Header = key,
                         Binding = new Binding($"[{key}]")
                     };
-                    myDataGrid.Columns.Add(col);
+                    databaseDataGrid.Columns.Add(col);
                 }
 
-                myDataGrid.ItemsSource = database.Rows;
+                databaseDataGrid.ItemsSource = database.Rows;
             }
             else
             {
+                selectionModeButton.Content = "☶";
                 var dataCollection = vm.CurrentDatabase.CurrentSelection;
 
                 if (dataCollection.Count == 0)
@@ -79,10 +81,22 @@ namespace SQLite_Insight
                         Header = key,
                         Binding = new Binding($"[{key}]")
                     };
-                    myDataGrid.Columns.Add(col);
+                    databaseDataGrid.Columns.Add(col);
                 }
 
-                myDataGrid.ItemsSource = dataCollection;
+                databaseDataGrid.ItemsSource = dataCollection;
+            }
+        }
+
+        public void SetSelectionButtonVisibility(bool state)
+        {
+            if (state)
+            {
+                selectionModeButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                selectionModeButton.Visibility = Visibility.Hidden;
             }
         }
     }
