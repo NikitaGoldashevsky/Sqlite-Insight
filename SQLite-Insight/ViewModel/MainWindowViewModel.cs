@@ -235,7 +235,6 @@ namespace SQLite_Insight.ViewModel
         }
 
 
-        // TO DO: when file created change it
         private void OnNewFile()
         {
             SaveFileDialog fileDialog = new SaveFileDialog
@@ -245,24 +244,21 @@ namespace SQLite_Insight.ViewModel
                 DefaultExt = "db"
             };
 
-            bool? fileCreated = fileDialog.ShowDialog();
-
-            string? dialogResult;
-            string tableName;
-            do
-            {
-                dialogResult = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
-                if (dialogResult == null)
+            if (fileDialog.ShowDialog() == true) { 
+                string? dialogResult;
+                string tableName;
+                do
                 {
-                    return;
+                    dialogResult = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
+                    if (dialogResult == null)
+                    {
+                        return;
+                    }
                 }
-            }
-            while (dialogResult.IndexOf(' ') != -1);
+                while (dialogResult.IndexOf(' ') != -1);
 
-            tableName = dialogResult;
+                tableName = dialogResult;
 
-            if (fileCreated == true)
-            {
                 string filePath = fileDialog.FileName;
 
                 if (File.Exists(filePath))
@@ -278,6 +274,7 @@ namespace SQLite_Insight.ViewModel
                 using (FileStream fs = File.Create(filePath)) { };
 
                 CurrentDatabase = new Database(filePath, true, tableName);
+                MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
             }
         }
     }

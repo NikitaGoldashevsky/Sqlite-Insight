@@ -37,7 +37,6 @@ namespace SQLite_Insight.Model
                     {
                         connection.Open();
                         string createTableQuery = $"CREATE TABLE IF NOT EXISTS {tableName} (Key INTEGER, Value TEXT)";
-                        TableName = tableName;
 
                         using (SqliteCommand command = new SqliteCommand(createTableQuery, connection))
                         {
@@ -52,6 +51,7 @@ namespace SQLite_Insight.Model
                 }
             }
 
+            TableName = tableName;
             rows = new ObservableCollection<Dictionary<string, string>>();
             Path = path;
             LoadDatabaseContent();
