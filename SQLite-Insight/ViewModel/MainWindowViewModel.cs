@@ -244,38 +244,42 @@ namespace SQLite_Insight.ViewModel
                 DefaultExt = "db"
             };
 
-            if (fileDialog.ShowDialog() == true) { 
-                string? dialogResult;
-                string tableName;
-                do
-                {
-                    dialogResult = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
-                    if (dialogResult == null)
-                    {
-                        return;
-                    }
-                }
-                while (dialogResult.IndexOf(' ') != -1);
-
-                tableName = dialogResult;
-
-                string filePath = fileDialog.FileName;
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                string directoryPath = System.IO.Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                using (FileStream fs = File.Create(filePath)) { };
-
-                CurrentDatabase = new Database(filePath, true, tableName);
-                MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
+            if (fileDialog.ShowDialog() != true) {
+                return;
             }
+
+            string? dialogResult;
+            string tableName;
+            do
+            {
+                dialogResult = InputDialogStatic.ShowDialog("Table name", "Name of a new table");
+                if (dialogResult == null)
+                {
+                    return;
+                }
+            }
+            while (dialogResult.IndexOf(' ') != -1);
+
+            tableName = dialogResult;
+
+            string filePath = fileDialog.FileName;
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            string directoryPath = System.IO.Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            using (FileStream fs = File.Create(filePath)) { };
+
+            CurrentDatabase = new Database(filePath, true, tableName);
+            MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
+
+            this.databaseAction.FillDataGrid();
         }
     }
 }

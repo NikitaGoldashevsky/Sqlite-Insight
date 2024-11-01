@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace SQLite_Insight
 {
@@ -26,6 +27,7 @@ namespace SQLite_Insight
             }
 
             myDataGrid.Columns.Clear();
+            myDataGrid.ItemsSource = null;
 
             if (vm.CurrentDatabase.SelectionMode == false)
             {
@@ -33,6 +35,19 @@ namespace SQLite_Insight
 
                 if (database.Rows.Count == 0)
                 {
+                    var columnNames = database.GetColumnNames();
+                    if (columnNames.Count != 0)
+                    {
+                        foreach (var columnName in columnNames)
+                        {
+                            DataGridTextColumn col = new DataGridTextColumn
+                            {
+                                Header = columnName
+                            };
+                            myDataGrid.Columns.Add(col);
+                        }
+                    }
+
                     return;
                 }
 
@@ -70,6 +85,5 @@ namespace SQLite_Insight
                 myDataGrid.ItemsSource = dataCollection;
             }
         }
-
     }
 }
