@@ -13,6 +13,12 @@ namespace SQLite_Insight.Model
 
         [ObservableProperty]
         ObservableCollection<Dictionary<string, string>> rows;
+        
+        [ObservableProperty]
+        ObservableCollection<Dictionary<string, string>> currentSelection;
+
+        [ObservableProperty]
+        bool selectionMode = false;
 
         [ObservableProperty]
         private string? path;
@@ -137,11 +143,10 @@ namespace SQLite_Insight.Model
         }
 
 
-        // CREATE TABLE IF NOT EXISTS Users (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)
-        public void Execute(string query)
+        public ObservableCollection<Dictionary<string, string>> Execute(string query)
         {
-            string sql = query;
             string connectionString = $"Data Source={Path}";
+            var results = new ObservableCollection<Dictionary<string, string>>();
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -149,10 +154,33 @@ namespace SQLite_Insight.Model
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = sql;
-                    command.ExecuteNonQuery();
+                    command.CommandText = query;
+
+                    if (query.TrimStart().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, string>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    row[reader.GetName(i)] = (string)reader.GetValue(i).ToString();
+                                }
+
+                                results.Add(row);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Execute non-select queries
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
+
+            return results;
         }
 
         public bool Update()

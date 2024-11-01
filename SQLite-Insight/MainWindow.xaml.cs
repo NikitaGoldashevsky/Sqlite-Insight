@@ -19,18 +19,23 @@ namespace SQLite_Insight
 
         public void FillDataGrid()
         {
-            if (DataContext is MainWindowViewModel vm)
+            if (!(DataContext is MainWindowViewModel vm))
+            {
+                MessageBox.Show("Error while filling data grid.", "Error");
+                return;
+            }
+
+            myDataGrid.Columns.Clear();
+
+            if (vm.CurrentDatabase.SelectionMode == false)
             {
                 var database = vm.CurrentDatabase;
-
-                myDataGrid.Columns.Clear();
 
                 if (database.Rows.Count == 0)
                 {
                     return;
                 }
 
-                // Set up columns
                 foreach (var key in database.Rows[0].Keys)
                 {
                     DataGridTextColumn col = new DataGridTextColumn
@@ -41,12 +46,28 @@ namespace SQLite_Insight
                     myDataGrid.Columns.Add(col);
                 }
 
-                // Set ItemsSource
                 myDataGrid.ItemsSource = database.Rows;
             }
             else
             {
-                MessageBox.Show("Error while filling data grid.", "Error");
+                var dataCollection = vm.CurrentDatabase.CurrentSelection;
+
+                if (dataCollection.Count == 0)
+                {
+                    return;
+                }
+
+                foreach (var key in dataCollection[0].Keys)
+                {
+                    DataGridTextColumn col = new DataGridTextColumn
+                    {
+                        Header = key,
+                        Binding = new Binding($"[{key}]")
+                    };
+                    myDataGrid.Columns.Add(col);
+                }
+
+                myDataGrid.ItemsSource = dataCollection;
             }
         }
 

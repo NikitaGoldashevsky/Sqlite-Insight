@@ -10,6 +10,8 @@ using System.Printing;
 using System.Windows;
 using SQLite_Insight.View;
 using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SQLite_Insight.ViewModel
 {
@@ -86,28 +88,34 @@ namespace SQLite_Insight.ViewModel
 
         private void OnExecuteQuery()
         {
-            string errorMessage;
-
-            if (CurrentDatabase != null)
+            if (CurrentDatabase == null)
             {
-                try
-                {
-                    CurrentDatabase.Execute(QueryTextBoxContent);
+                MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
-                    CurrentDatabase.Update();
-                    this.databaseAction.FillDataGrid();
-                    return;
-                }
-                catch (Exception ex) { 
-                    errorMessage = $"Query execution failed: {ex.Message}";
-                }
+            ObservableCollection<Dictionary<string, string>> selectionResult;
+
+            try
+            {
+                selectionResult = CurrentDatabase.Execute(QueryTextBoxContent);
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"Query execution failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (selectionResult.Count == 0)
+            {
+                CurrentDatabase.Update();
             }
             else
             {
-                errorMessage = "No database opened!";
+                CurrentDatabase.CurrentSelection = selectionResult;
+                CurrentDatabase.SelectionMode = true;
             }
-
-            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            this.databaseAction.FillDataGrid();
+            return;
         }
 
 
@@ -227,6 +235,7 @@ namespace SQLite_Insight.ViewModel
         }
 
 
+        // TO DO: when file created change it
         private void OnNewFile()
         {
             SaveFileDialog fileDialog = new SaveFileDialog
