@@ -1,17 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Data.Sqlite;
 using Microsoft.Win32;
 using SQLite_Insight.Model;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Printing;
-using System.Windows;
-using SQLite_Insight.View;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Shapes;
 
 namespace SQLite_Insight.ViewModel
 {
@@ -79,7 +77,33 @@ namespace SQLite_Insight.ViewModel
 
         private void OnSwitchTable()
         {
-            ;
+            if (CurrentDatabase == null)
+            {
+                MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            //List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
+
+            //string queryText = "Select a table to be opened:";
+            //string? tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
+            //while (tableName == null)
+            //{
+            //    MessageBox.Show("You must select a table!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
+            //}
+
+            List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
+            if (tableNames.Count() != 0)
+            {
+                string? selectedTable = SelectDialogStatic.ShowDialog("Table selection", "Select a table to be opened:", tableNames);
+                if (selectedTable != null && CurrentDatabase.TableName != selectedTable) {
+                    CurrentDatabase = new Database(CurrentDatabase.Path, false, selectedTable);
+                    MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
+                    databaseAction.FillDataGrid();
+                    databaseAction.SetSelectionButtonVisibility(false);
+                }
+            }
         }
         
 
@@ -93,6 +117,7 @@ namespace SQLite_Insight.ViewModel
         {
             ;
         }
+
 
         private void OnOpenFile()
         {
@@ -112,9 +137,19 @@ namespace SQLite_Insight.ViewModel
                     return;
                 };
 
-                CurrentDatabase = new Database(path);
-                MainWindowTitle = currentDatabase.TableName + " - " + mainWindowDefaultTitle;
-                this.databaseAction.FillDataGrid();
+                List<string> tableNames = Database.GetTableNames(path);
+
+                string queryText = "Select a table to be opened:";
+                string? tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
+                while (tableName == null)
+                {
+                    MessageBox.Show("You must select a table!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
+                }
+
+                CurrentDatabase = new Database(path, false, tableName);
+                MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
+                databaseAction.FillDataGrid();
                 databaseAction.SetSelectionButtonVisibility(false);
             }
         }
@@ -318,6 +353,7 @@ namespace SQLite_Insight.ViewModel
             this.databaseAction.FillDataGrid();
             databaseAction.SetSelectionButtonVisibility(false);
         }
+
 
         private void OnChangeSelectionMode()
         {

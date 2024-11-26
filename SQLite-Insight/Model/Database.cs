@@ -1,11 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Data.Sqlite;
-using SQLite_Insight.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace SQLite_Insight.Model
@@ -29,7 +27,7 @@ namespace SQLite_Insight.Model
         private string? tableName;
 
 
-        public Database(string path, bool createNew = false, string tableName="new_table")
+        public Database(string path, bool createNew = false, string tableName = "new_table")
         {
             if (createNew)
             {
@@ -78,6 +76,30 @@ namespace SQLite_Insight.Model
         }
 
 
+        static public List<string> GetTableNames(string filepath)
+        {
+            List<string> tableNames = new List<string>();
+            string connectionString = $"Data Source={filepath}";
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var tableCommand = connection.CreateCommand();
+                tableCommand.CommandText = "SELECT name FROM sqlite_master WHERE type='table'";
+
+                using (var reader = tableCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tableNames.Add(reader.GetString(0));
+                    }
+                }
+            }
+            return tableNames;
+        }
+
+
         public ObservableCollection<string> GetColumnNames()
         {
             ObservableCollection<string> columnNames = new ObservableCollection<string>();
@@ -109,28 +131,6 @@ namespace SQLite_Insight.Model
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
-
-                var tableCommand = connection.CreateCommand();
-                tableCommand.CommandText = "SELECT name FROM sqlite_master WHERE type='table'";
-
-                var tableNames = new List<string>();
-                using (var reader = tableCommand.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        tableNames.Add(reader.GetString(0));
-                    }
-                }
-
-                // Create a combo-box form
-                // fill it with variants
-
-                TableName = SelectDialogStatic.ShowDialog("Select table", "Select a table to be opened", tableNames);
-                while (TableName == null)
-                {
-                    MessageBox.Show("You must select a table!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    TableName = SelectDialogStatic.ShowDialog("Select table", "Select a table to be opened", tableNames);
-                }
 
                 var dataCommand = connection.CreateCommand();
                 dataCommand.CommandText = $"SELECT * FROM {TableName}";
