@@ -40,7 +40,7 @@
 
         <DataGrid Grid.Row="1" Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" x:Name="databaseDataGrid"/>
         <Button Grid.Row="1" Grid.Column="0" x:Name="selectionModeButton" Command="{Binding ChangeSelectionModeCommand}"
-                Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 40, 6" Width="25" Height="25"/>
+                Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 22, 7" Width="25" Height="25"/>
 
         <GridSplitter Grid.Row="2"
 			Margin="15, 5"
@@ -83,18 +83,13 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Height="auto" Width="50" Margin="10, 0, 15, 5" Content="Help" Command="{Binding HelpCommand}"></Button>
             </StackPanel>
-                
+
             <TextBox Grid.Row="1" MinHeight="95" AcceptsReturn="True" Text="{Binding QueryTextBoxContent, UpdateSourceTrigger=PropertyChanged}"
                      Margin="15,0,15,15" Background="FloralWhite" FontFamily="Cascadia Code" TextWrapping="Wrap">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding ExecuteQueryCommand}" />
                 </TextBox.InputBindings>
             </TextBox>
-
-            <!--<StackPanel Grid.Column="1">
-                <Button Content="Execute" Height="45" Margin="0, 0, 15, 0" Command="{Binding ExecuteQueryCommand}"/>
-                <Button Content="Clear" Height="45" Margin="0, 10, 15, 0" Command="{Binding ClearQueryCommand}"/>
-            </StackPanel>-->
 
         </Grid>
 
