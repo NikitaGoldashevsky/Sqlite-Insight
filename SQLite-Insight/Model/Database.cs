@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Data.Sqlite;
+using SQLite_Insight.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace SQLite_Insight.Model
@@ -100,7 +102,6 @@ namespace SQLite_Insight.Model
             return columnNames;
         }
 
-
         private void LoadDatabaseContent()
         {
             string connectionString = $"Data Source={Path}";
@@ -109,34 +110,43 @@ namespace SQLite_Insight.Model
             {
                 connection.Open();
 
-                // Get all table names
                 var tableCommand = connection.CreateCommand();
                 tableCommand.CommandText = "SELECT name FROM sqlite_master WHERE type='table'";
 
+                var tableNames = new List<string>();
                 using (var reader = tableCommand.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        TableName = reader.GetString(0);
+                        tableNames.Add(reader.GetString(0));
+                    }
+                }
 
-                        // Read data from each table
-                        var dataCommand = connection.CreateCommand();
-                        dataCommand.CommandText = $"SELECT * FROM {TableName}";
+                // Create a combo-box form
+                // fill it with variants
 
-                        using (var dataReader = dataCommand.ExecuteReader())
+                TableName = SelectDialogStatic.ShowDialog("Select table", "Select a table to be opened", tableNames);
+                while (TableName == null)
+                {
+                    MessageBox.Show("You must select a table!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    TableName = SelectDialogStatic.ShowDialog("Select table", "Select a table to be opened", tableNames);
+                }
+
+                var dataCommand = connection.CreateCommand();
+                dataCommand.CommandText = $"SELECT * FROM {TableName}";
+
+                using (var dataReader = dataCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var row = new Dictionary<string, string>();
+                        for (int i = 0; i < dataReader.FieldCount; i++)
                         {
-                            while (dataReader.Read())
-                            {
-                                var row = new Dictionary<string, string>();
-                                for (int i = 0; i < dataReader.FieldCount; i++)
-                                {
-                                    string columnName = dataReader.GetName(i);
-                                    string value = (string)dataReader.GetValue(i).ToString();
-                                    row[columnName] = value;
-                                }
-                                Rows.Add(row);
-                            }
+                            string columnName = dataReader.GetName(i);
+                            string value = (string)dataReader.GetValue(i).ToString();
+                            row[columnName] = value;
                         }
+                        Rows.Add(row);
                     }
                 }
             }

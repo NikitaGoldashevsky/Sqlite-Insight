@@ -5,13 +5,13 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SQLite_Insight"
 		mc:Ignorable="d"
-		Title="{Binding MainWindowTitle}" Height="450" Width="700" MinHeight="375" MinWidth="580">
+		Title="{Binding MainWindowTitle}" Height="450" Width="700" MinHeight="375" MinWidth="580"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="18" MinHeight="18"/>
             <RowDefinition Height="65*" MinHeight="165"/>
             <RowDefinition Height="Auto"/>
-            <!--<RowDefinition Height="25" MinHeight="25" MaxHeight="25"/>-->
             <RowDefinition Height="35*" MinHeight="140"/>
         </Grid.RowDefinitions>
 
