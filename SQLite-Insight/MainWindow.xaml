@@ -21,6 +21,12 @@
                 <MenuItem Header="New" Command="{Binding NewFileCommand}"/>
             </MenuItem>
 
+            <MenuItem Header="Table">
+                <MenuItem Header="Switch" Command="{Binding SwitchTableCommand}"/>
+                <MenuItem Header="Create" Command="{Binding CreateTableCommand}"/>
+                <MenuItem Header="Remove" Command="{Binding RemoveTableCommand}"/>
+            </MenuItem>
+            
             <MenuItem Header="View">
                 <MenuItem Header="Scale">
                     <MenuItem Header="Default" Command="{Binding }"/>

@@ -24,16 +24,23 @@ namespace SQLite_Insight.ViewModel
 
         public RelayCommand OpenFileCommand { get; }
         public RelayCommand NewFileCommand { get; }
+
         public RelayCommand ClearQueryCommand { get; }
         public RelayCommand ExecuteQueryCommand { get; }
-        public RelayCommand HelpCommand { get; }
+
         public RelayCommand QueryInsertCommand { get; }
         public RelayCommand QueryDeleteCommand { get; }
         public RelayCommand QuerySelectCommand { get; }
         public RelayCommand QueryAddCommand { get; }
         public RelayCommand QueryDropCommand { get; }
         public RelayCommand QueryRenameCommand { get; }
+
+        public RelayCommand HelpCommand { get; }
         public RelayCommand ChangeSelectionModeCommand { get; }
+
+        public RelayCommand SwitchTableCommand { get; }
+        public RelayCommand CreateTableCommand { get; }
+        public RelayCommand RemoveTableCommand { get; }
 
         [ObservableProperty]
         private string queryTextBoxContent;
@@ -48,20 +55,44 @@ namespace SQLite_Insight.ViewModel
         {
             OpenFileCommand = new RelayCommand(OnOpenFile);
             NewFileCommand = new RelayCommand(OnNewFile);
+
             ClearQueryCommand = new RelayCommand(OnClearQuery);
             ExecuteQueryCommand = new RelayCommand(OnExecuteQuery);
-            HelpCommand = new RelayCommand(OnHelp);
+
             QueryInsertCommand = new RelayCommand(OnQueryInsert);
             QueryDeleteCommand = new RelayCommand(OnQueryDelete);
             QuerySelectCommand = new RelayCommand(OnQuerySelect);
             QueryAddCommand = new RelayCommand(OnQueryAdd);
             QueryDropCommand = new RelayCommand(OnQueryDrop);
             QueryRenameCommand = new RelayCommand(OnQueryRename);
+
+            HelpCommand = new RelayCommand(OnHelp);
             ChangeSelectionModeCommand = new RelayCommand(OnChangeSelectionMode);
+
+            SwitchTableCommand = new RelayCommand(OnSwitchTable);
+            CreateTableCommand = new RelayCommand(OnCreateTable);
+            RemoveTableCommand = new RelayCommand(OnRemoveTable);
 
             this.databaseAction = databaseAction;
         }
 
+
+        private void OnSwitchTable()
+        {
+            ;
+        }
+        
+
+        private void OnCreateTable()
+        {
+            ;
+        }
+        
+
+        private void OnRemoveTable()
+        {
+            ;
+        }
 
         private void OnOpenFile()
         {
