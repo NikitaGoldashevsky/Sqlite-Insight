@@ -252,6 +252,7 @@ namespace SQLite_Insight.ViewModel
             if (CurrentDatabase == null)
             {
                 MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
             ObservableCollection<Dictionary<string, string>>? selectionResult;
