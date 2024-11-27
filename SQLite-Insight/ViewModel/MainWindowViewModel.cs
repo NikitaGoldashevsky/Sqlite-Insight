@@ -5,6 +5,7 @@ using SQLite_Insight.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -84,6 +85,16 @@ namespace SQLite_Insight.ViewModel
         }
 
 
+        private void UpdateMainWindowTable(string tableName)
+        {
+            CurrentDatabase = new Database(CurrentDatabase.Path, false, tableName);
+            MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
+            databaseAction.FillDataGrid();
+            databaseAction.SetSelectionButtonVisibility(false);
+            UpdateMainWindowTitle();
+        }
+
+
         private void OnSwitchTable()
         {
             if (CurrentDatabase == null)
@@ -97,11 +108,7 @@ namespace SQLite_Insight.ViewModel
             {
                 string? selectedTable = SelectDialogStatic.ShowDialog("Table selection", "Select a table to be opened:", tableNames);
                 if (selectedTable != null && CurrentDatabase.TableName != selectedTable) {
-                    CurrentDatabase = new Database(CurrentDatabase.Path, false, selectedTable);
-                    MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
-                    databaseAction.FillDataGrid();
-                    databaseAction.SetSelectionButtonVisibility(false);
-                    UpdateMainWindowTitle();
+                    UpdateMainWindowTable(selectedTable);
                 }
             }
         }
@@ -109,7 +116,43 @@ namespace SQLite_Insight.ViewModel
 
         private void OnCreateTable()
         {
-            ;
+            if (CurrentDatabase == null)
+            {
+                MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            while (true) {
+                string? newTableName = InputDialogStatic.ShowDialog("New table", "Name of a new table:");
+                if (newTableName == null) // User pressed 'cancel' or closed the dialog window
+                {
+                    return;
+                }
+                else if (newTableName.Count() == 0)
+                {
+                    MessageBox.Show("Table must have a name!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
+                    if (tableNames.Contains(newTableName))
+                    {
+                        MessageBox.Show($"Table named {newTableName} already exists in the database!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            CurrentDatabase.Execute($"CREATE TABLE {newTableName} (id INT PRIMARY KEY);");
+                            UpdateMainWindowTable(newTableName);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show($"Failed to add the table: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        return;
+                    }
+                }
+            }
         }
         
 
