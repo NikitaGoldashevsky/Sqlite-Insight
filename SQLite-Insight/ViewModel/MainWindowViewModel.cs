@@ -158,7 +158,56 @@ namespace SQLite_Insight.ViewModel
 
         private void OnRemoveTable()
         {
-            ;
+            if (CurrentDatabase == null)
+            {
+                MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (Database.GetTableNames(CurrentDatabase.Path).Count() == 1)
+            {
+                MessageBox.Show("You can not delete the only table in the database!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            while (true)
+            {
+                string? toRemoveTableName = SelectDialogStatic.ShowDialog("Remove table", "Name of a table to remove:", Database.GetTableNames(CurrentDatabase.Path));
+                if (toRemoveTableName == null) // User pressed 'cancel' or closed the dialog window
+                {
+                    return;
+                }
+                else if (toRemoveTableName.Count() == 0)
+                {
+                    MessageBox.Show("There is no table without a name!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
+                    if (!tableNames.Contains(toRemoveTableName))
+                    {
+                        MessageBox.Show($"There is no table named {toRemoveTableName} in the database!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            CurrentDatabase.Execute($"DROP TABLE {toRemoveTableName};");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Failed to remove the table: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        if (toRemoveTableName == CurrentDatabase.TableName)
+                        {
+                            UpdateMainWindowTable(Database.GetTableNames(CurrentDatabase.Path)[0]);
+                        }
+                        return;
+                    }
+                }
+            }
         }
 
 
