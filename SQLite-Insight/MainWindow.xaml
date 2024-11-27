@@ -29,16 +29,22 @@
             
             <MenuItem Header="View">
                 <MenuItem Header="Scale">
-                    <MenuItem Header="Default" Command="{Binding }"/>
-                    <MenuItem Header="More" Command="{Binding }"/>
-                    <MenuItem Header="Less" Command="{Binding }"/>
+                    <MenuItem Header="Larger" Command="{Binding IncreaseDataGridLayoutScaleCommand}"/>
+                    <MenuItem Header="Smaller" Command="{Binding DecreaseDataGridLayoutScaleCommand}"/>
+                    <MenuItem Header="Default" Command="{Binding ResetDataGridLayoutScaleCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Columns"/>
             </MenuItem>
 
         </Menu>
 
-        <DataGrid Grid.Row="1" Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" x:Name="databaseDataGrid"/>
+        <DataGrid Grid.Row="1" Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" x:Name="databaseDataGrid">
+            <DataGrid.LayoutTransform>
+                <ScaleTransform ScaleX="{Binding DataGridLayoutScale, UpdateSourceTrigger=PropertyChanged}"
+                                ScaleY="{Binding DataGridLayoutScale, UpdateSourceTrigger=PropertyChanged}" />
+            </DataGrid.LayoutTransform>
+        </DataGrid>
+        
         <Button Grid.Row="1" Grid.Column="0" x:Name="selectionModeButton" Command="{Binding ChangeSelectionModeCommand}"
                 Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 22, 7" Width="25" Height="25"/>
 

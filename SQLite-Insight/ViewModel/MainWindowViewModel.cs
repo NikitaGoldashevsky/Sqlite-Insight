@@ -5,7 +5,6 @@ using SQLite_Insight.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -40,11 +39,18 @@ namespace SQLite_Insight.ViewModel
         public RelayCommand CreateTableCommand { get; }
         public RelayCommand RemoveTableCommand { get; }
 
+        public RelayCommand IncreaseDataGridLayoutScaleCommand { get; }
+        public RelayCommand DecreaseDataGridLayoutScaleCommand { get; }
+        public RelayCommand ResetDataGridLayoutScaleCommand { get; }
+
         [ObservableProperty]
         private string queryTextBoxContent;
 
         [ObservableProperty]
         public Database? currentDatabase;
+
+        [ObservableProperty]
+        public double dataGridLayoutScale = 1;
 
         private readonly IDatabaseAction databaseAction;
 
@@ -70,6 +76,10 @@ namespace SQLite_Insight.ViewModel
             SwitchTableCommand = new RelayCommand(OnSwitchTable);
             CreateTableCommand = new RelayCommand(OnCreateTable);
             RemoveTableCommand = new RelayCommand(OnRemoveTable);
+
+            IncreaseDataGridLayoutScaleCommand = new RelayCommand(OnIncreaseDataGridLayoutScale);
+            DecreaseDataGridLayoutScaleCommand = new RelayCommand(OnDecreaseDataGridLayoutScale);
+            ResetDataGridLayoutScaleCommand = new RelayCommand(OnResetDataGridLayoutScale);
 
             this.databaseAction = databaseAction;
         }
@@ -456,6 +466,24 @@ namespace SQLite_Insight.ViewModel
             }
             CurrentDatabase.SelectionMode = !CurrentDatabase.SelectionMode;
             databaseAction.FillDataGrid();
+        }
+
+
+        private void OnIncreaseDataGridLayoutScale()
+        {
+            DataGridLayoutScale = DataGridLayoutScale * 1.25;
+        }
+
+
+        private void OnDecreaseDataGridLayoutScale()
+        {
+            DataGridLayoutScale = DataGridLayoutScale * 0.8;
+        }
+
+
+        private void OnResetDataGridLayoutScale()
+        {
+            DataGridLayoutScale = 1;
         }
     }
 }
