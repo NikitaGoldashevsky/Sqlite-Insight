@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Shapes;
 
 namespace SQLite_Insight.ViewModel
 {
@@ -75,6 +74,16 @@ namespace SQLite_Insight.ViewModel
         }
 
 
+        private void UpdateMainWindowTitle()
+        {
+            if (CurrentDatabase != null)
+            {
+                MainWindowTitle = System.IO.Path.GetFileName(CurrentDatabase.Path) + ": "
+                    + CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
+            }
+        }
+
+
         private void OnSwitchTable()
         {
             if (CurrentDatabase == null)
@@ -82,16 +91,6 @@ namespace SQLite_Insight.ViewModel
                 MessageBox.Show("No database opened!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            //List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
-
-            //string queryText = "Select a table to be opened:";
-            //string? tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
-            //while (tableName == null)
-            //{
-            //    MessageBox.Show("You must select a table!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    tableName = SelectDialogStatic.ShowDialog("Select table", queryText, tableNames);
-            //}
 
             List<string> tableNames = Database.GetTableNames(CurrentDatabase.Path);
             if (tableNames.Count() != 0)
@@ -102,6 +101,7 @@ namespace SQLite_Insight.ViewModel
                     MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
                     databaseAction.FillDataGrid();
                     databaseAction.SetSelectionButtonVisibility(false);
+                    UpdateMainWindowTitle();
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace SQLite_Insight.ViewModel
                 }
 
                 CurrentDatabase = new Database(path, false, tableName);
-                MainWindowTitle = CurrentDatabase.TableName + " - " + mainWindowDefaultTitle;
+                UpdateMainWindowTitle();
                 databaseAction.FillDataGrid();
                 databaseAction.SetSelectionButtonVisibility(false);
             }
