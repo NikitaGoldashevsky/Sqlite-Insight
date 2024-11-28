@@ -21,19 +21,18 @@
                 <MenuItem Header="New" Command="{Binding NewFileCommand}"/>
             </MenuItem>
 
-            <MenuItem Header="Table">
+            <MenuItem Header="Table" IsEnabled="{Binding FileOpened, UpdateSourceTrigger=PropertyChanged}">
                 <MenuItem Header="Switch" Command="{Binding SwitchTableCommand}"/>
                 <MenuItem Header="Create" Command="{Binding CreateTableCommand}"/>
                 <MenuItem Header="Remove" Command="{Binding RemoveTableCommand}"/>
             </MenuItem>
-            
-            <MenuItem Header="View">
+
+            <MenuItem Header="View" IsEnabled="{Binding FileOpened, UpdateSourceTrigger=PropertyChanged}">
                 <MenuItem Header="Scale">
                     <MenuItem Header="Larger" Command="{Binding IncreaseDataGridLayoutScaleCommand}"/>
                     <MenuItem Header="Smaller" Command="{Binding DecreaseDataGridLayoutScaleCommand}"/>
                     <MenuItem Header="Default" Command="{Binding ResetDataGridLayoutScaleCommand}"/>
                 </MenuItem>
-                <MenuItem Header="Columns"/>
             </MenuItem>
 
         </Menu>

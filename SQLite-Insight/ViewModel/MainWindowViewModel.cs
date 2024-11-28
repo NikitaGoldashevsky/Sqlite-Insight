@@ -17,6 +17,9 @@ namespace SQLite_Insight.ViewModel
         private const string mainWindowDefaultTitle = "SQLite-Insight";
 
         [ObservableProperty]
+        private bool fileOpened = false;
+
+        [ObservableProperty]
         private string mainWindowTitle = mainWindowDefaultTitle;
 
         public RelayCommand OpenFileCommand { get; }
@@ -253,6 +256,7 @@ namespace SQLite_Insight.ViewModel
                 UpdateMainWindowTitle();
                 databaseAction.FillDataGrid();
                 databaseAction.SetSelectionButtonVisibility(false);
+                FileOpened = true;
             }
         }
 
@@ -455,6 +459,8 @@ namespace SQLite_Insight.ViewModel
 
             this.databaseAction.FillDataGrid();
             databaseAction.SetSelectionButtonVisibility(false);
+
+            FileOpened = true;
         }
 
 
