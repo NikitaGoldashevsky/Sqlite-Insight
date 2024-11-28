@@ -37,7 +37,8 @@
 
         </Menu>
 
-        <DataGrid Grid.Row="1" Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" x:Name="databaseDataGrid">
+        <DataGrid Grid.Row="1" Grid.Column="0" Margin="15, 10, 15, 0" AutoGenerateColumns="False" 
+                  x:Name="databaseDataGrid" IsReadOnly="true">
             <DataGrid.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding DataGridLayoutScale, UpdateSourceTrigger=PropertyChanged}"
                                 ScaleY="{Binding DataGridLayoutScale, UpdateSourceTrigger=PropertyChanged}" />
