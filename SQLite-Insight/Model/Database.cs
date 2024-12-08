@@ -204,38 +204,5 @@ namespace SQLite_Insight.Model
             LoadDatabaseContent();
             return true;
         }
-
-        //public bool DeleteRow(string column1Value)
-        //{
-        //    using (var connection = new SqliteConnection("Data Source=mydatabase.db"))
-        //    {
-        //        connection.Open();
-                
-
-        //        var command = connection.CreateCommand();
-        //        command.CommandText =
-        //        $@"
-        //            DELETE FROM {tableName}
-        //            WHERE Id = $id;
-        //        ";
-
-        //        //// Use parameterized queries to prevent SQL Injection
-        //        //command.Parameters.AddWithValue("$id", personId);
-
-        //        // Execute the command
-        //        int rowsAffected = command.ExecuteNonQuery(); // Returns the number of affected rows
-
-        //        if (rowsAffected > 0)
-        //        {
-        //            MessageBox.Show($"Row deleted successfully!");
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show($"Row deletion failed.");
-        //            return false;
-        //        }
-        //    }
-        //}
     }
 }
