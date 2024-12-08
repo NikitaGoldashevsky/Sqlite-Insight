@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace SQLite_Insight.View
 {
